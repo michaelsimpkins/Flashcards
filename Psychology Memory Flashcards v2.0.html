@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Level Revision Flashcards - Psychology: Memory</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --container-max-width: 800px;
+            --body-padding: 20px;
+            --card-height: 400px;
+            --card-padding: 40px;
+            --front-font-size: 1.5em;
+            --back-font-size: 1.3em;
+            --header-title-size: 2.5em;
+            --header-margin-bottom: 40px;
+            --controls-gap: 20px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--body-padding);
+        }
+
+        body.format-laptop {
+            --container-max-width: 800px;
+            --body-padding: 20px;
+            --card-height: 400px;
+            --card-padding: 40px;
+            --front-font-size: 1.5em;
+            --back-font-size: 1.3em;
+            --header-title-size: 2.5em;
+            --header-margin-bottom: 40px;
+            --controls-gap: 20px;
+        }
+
+        body.format-ipad {
+            --container-max-width: 980px;
+            --body-padding: 24px;
+            --card-height: 430px;
+            --card-padding: 44px;
+            --front-font-size: 1.55em;
+            --back-font-size: 1.25em;
+            --header-title-size: 2.3em;
+            --header-margin-bottom: 28px;
+            --controls-gap: 18px;
+        }
+
+        body.format-iphone {
+            --container-max-width: 430px;
+            --body-padding: 14px;
+            --card-height: 470px;
+            --card-padding: 26px;
+            --front-font-size: 1.15em;
+            --back-font-size: 1em;
+            --header-title-size: 1.65em;
+            --header-margin-bottom: 22px;
+            --controls-gap: 12px;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--container-max-width);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: var(--header-margin-bottom);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: var(--header-title-size);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4ade80;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 100%;
+            height: var(--card-height);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            padding: var(--card-padding);
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: var(--front-font-size);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: var(--back-font-size);
+            line-height: 1.7;
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            max-height: 100%;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .card-label {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.85em;
+            opacity: 0.8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .flip-hint {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85em;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+        }
+
+        .card-front .flip-hint::after {
+            content: "Click to reveal answer";
+        }
+
+        .card-back .flip-hint::after {
+            content: "Click for question";
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--controls-gap);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            font-size: 0.9em;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .counter {
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .completion-screen {
+            text-align: center;
+            color: white;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .completion-screen.show {
+            display: block;
+        }
+
+        .completion-screen h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .completion-screen p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-box h3 {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-box .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        body.format-iphone .header p {
+            font-size: 0.95em;
+        }
+
+        body.format-iphone .progress-bar {
+            margin-top: 16px;
+            margin-bottom: 20px;
+        }
+
+        body.format-iphone .card-label {
+            font-size: 0.72em;
+            top: 12px;
+            right: 15px;
+        }
+
+        body.format-iphone .flip-hint {
+            font-size: 0.75em;
+            bottom: 12px;
+        }
+
+        body.format-iphone .controls {
+            flex-direction: column;
+            margin-bottom: 18px;
+        }
+
+        body.format-iphone .btn-primary,
+        body.format-iphone .btn-secondary,
+        body.format-iphone .counter {
+            width: 100%;
+        }
+
+        body.format-iphone .btn {
+            padding: 11px 18px;
+            font-size: 0.9em;
+        }
+
+        body.format-iphone .card:hover {
+            transform: none;
+        }
+
+        body.format-iphone .stats {
+            grid-template-columns: 1fr;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .controls,
+            .header,
+            .completion-screen {
+                display: none;
+            }
+
+            .card {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body class="format-iphone">
+    <div class="container">
+        <div class="header">
+            <h1>Psychology: Memory</h1>
+            <p>A Level Revision Flashcards</p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div id="cardScreen">
+            <div class="card-container">
+                <div class="card" id="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="card-content">
+                                <div class="card-label">Question</div>
+                                <div id="cardQuestion"></div>
+                                <div class="flip-hint"></div>
+                            </div>
+                        </div>
+
+                        <div class="card-back">
+                            <div class="card-content">
+                                <div class="card-label">Answer</div>
+                                <div id="cardAnswer"></div>
+                                <div class="flip-hint"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="prevBtn" onclick="previousCard()">← Previous</button>
+
+                <div class="counter">
+                    <span id="currentCard">1</span> / <span id="totalCards">0</span>
+                </div>
+
+                <button class="btn btn-primary" id="nextBtn" onclick="nextCard()">Next →</button>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="resetCards()">Start Over</button>
+                <button class="btn btn-secondary" onclick="shuffleCards()">Shuffle</button>
+            </div>
+        </div>
+
+        <div class="completion-screen" id="completionScreen">
+            <h2>🎉 You've finished all cards!</h2>
+            <p>Great work on your revision!</p>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <h3>Cards Reviewed</h3>
+                    <div class="value" id="statsTotal">0</div>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Time Spent</h3>
+                    <div class="value" id="statsTime">0m</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="goBackToCards()">Review Again</button>
+                <button class="btn btn-secondary" onclick="downloadAsHTML()">Download Flashcards</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const downloadFilename = "flashcards-psychology-memory-iphone.html";
+
+        const flashcards = [
+            {
+                question: "What is memory?",
+                answer: "Memory is the cognitive process of encoding, storing and retrieving information over time."
+            },
+            {
+                question: "What are the three main processes involved in memory?",
+                answer: "Encoding changes information into a usable form, storage keeps it in memory, and retrieval accesses it when needed."
+            },
+            {
+                question: "What is coding in memory?",
+                answer: "Coding refers to the format in which information is stored, such as acoustically, visually or semantically."
+            },
+            {
+                question: "According to Baddeley, how is short-term memory mainly coded?",
+                answer: "Baddeley found that short-term memory is mainly coded acoustically, meaning by sound."
+            },
+            {
+                question: "According to Baddeley, how is long-term memory mainly coded?",
+                answer: "Baddeley found that long-term memory is mainly coded semantically, meaning by meaning."
+            },
+            {
+                question: "What is capacity in memory?",
+                answer: "Capacity is the amount of information that can be held in a memory store at one time."
+            },
+            {
+                question: "What did Jacobs find about short-term memory capacity?",
+                answer: "Jacobs found average digit span was about 9.3 items and letter span was about 7.3 items."
+            },
+            {
+                question: "What did Miller suggest about short-term memory capacity?",
+                answer: "Miller suggested short-term memory holds about 7 plus or minus 2 items, and that chunking can increase practical capacity."
+            },
+            {
+                question: "What is duration in memory?",
+                answer: "Duration is the length of time information can remain in a memory store."
+            },
+            {
+                question: "What did Peterson and Peterson find about short-term memory duration?",
+                answer: "They found that short-term memory lasts about 18 to 30 seconds without rehearsal, especially when rehearsal is prevented."
+            },
+            {
+                question: "What did Bahrick find about long-term memory duration?",
+                answer: "Bahrick found that some long-term memories can last for decades, such as recognition of school classmates many years later."
+            },
+            {
+                question: "What is the multi-store model of memory?",
+                answer: "Atkinson and Shiffrin proposed that memory has separate sensory register, short-term memory and long-term memory stores."
+            },
+            {
+                question: "What is the sensory register?",
+                answer: "The sensory register briefly holds information from the senses. It has a large capacity but very short duration."
+            },
+            {
+                question: "How does information move from the sensory register to short-term memory?",
+                answer: "Information moves into short-term memory when attention is paid to it."
+            },
+            {
+                question: "How does information move from short-term memory to long-term memory in the multi-store model?",
+                answer: "Information moves to long-term memory through maintenance rehearsal, which is repeating information."
+            },
+            {
+                question: "What is a strength of the multi-store model?",
+                answer: "It is supported by case studies such as HM, who had impaired long-term memory but relatively intact short-term memory."
+            },
+            {
+                question: "What is a limitation of the multi-store model?",
+                answer: "It oversimplifies memory by treating short-term and long-term memory as single stores, when evidence suggests they have different components."
+            },
+            {
+                question: "What is the working memory model?",
+                answer: "Baddeley and Hitch proposed that short-term memory is an active system with multiple components that process different types of information."
+            },
+            {
+                question: "What is the central executive?",
+                answer: "The central executive controls attention, coordinates the slave systems and allocates cognitive resources, but has limited capacity."
+            },
+            {
+                question: "What is the phonological loop?",
+                answer: "The phonological loop processes speech-based and sound-based information. It includes the phonological store and articulatory process."
+            },
+            {
+                question: "What is the visuo-spatial sketchpad?",
+                answer: "The visuo-spatial sketchpad processes visual and spatial information, such as shapes, colours and locations."
+            },
+            {
+                question: "What is the episodic buffer?",
+                answer: "The episodic buffer is a temporary store that integrates information from the slave systems and links working memory to long-term memory."
+            },
+            {
+                question: "What is a strength of the working memory model?",
+                answer: "Dual-task studies support it because people struggle more when doing two tasks using the same component than two tasks using different components."
+            },
+            {
+                question: "What is a limitation of the working memory model?",
+                answer: "The central executive is difficult to define and measure, so some psychologists argue it is too vague."
+            },
+            {
+                question: "What is episodic memory?",
+                answer: "Episodic memory is long-term memory for personal events, including details about time, place and emotions."
+            },
+            {
+                question: "What is semantic memory?",
+                answer: "Semantic memory is long-term memory for facts, knowledge and meanings, such as knowing that Paris is the capital of France."
+            },
+            {
+                question: "What is procedural memory?",
+                answer: "Procedural memory is long-term memory for skills and actions, such as riding a bike or typing."
+            },
+            {
+                question: "What is interference as an explanation for forgetting?",
+                answer: "Interference occurs when two memories conflict, making it harder to retrieve the target memory."
+            },
+            {
+                question: "What is proactive interference?",
+                answer: "Proactive interference occurs when older memories disrupt recall of newer information."
+            },
+            {
+                question: "What is retroactive interference?",
+                answer: "Retroactive interference occurs when newer memories disrupt recall of older information."
+            },
+            {
+                question: "What is retrieval failure?",
+                answer: "Retrieval failure occurs when information is stored in long-term memory but cannot be accessed because the correct cues are absent."
+            },
+            {
+                question: "What is context-dependent forgetting?",
+                answer: "Context-dependent forgetting occurs when recall is worse because the external environment at retrieval differs from the environment at learning."
+            },
+            {
+                question: "What is state-dependent forgetting?",
+                answer: "State-dependent forgetting occurs when recall is worse because the internal physical or emotional state at retrieval differs from the state at learning."
+            },
+            {
+                question: "What did Godden and Baddeley find about context-dependent memory?",
+                answer: "Divers recalled words best when learning and recall took place in the same context, either on land or underwater."
+            },
+            {
+                question: "What is eyewitness testimony?",
+                answer: "Eyewitness testimony is evidence given by a witness about an event or crime they have seen."
+            },
+            {
+                question: "How can leading questions affect eyewitness testimony?",
+                answer: "Leading questions can distort memory because their wording may suggest a particular answer or alter the witness's memory of the event."
+            },
+            {
+                question: "What did Loftus and Palmer find about leading questions?",
+                answer: "Participants estimated higher speeds when the verb smashed was used than when verbs such as hit were used."
+            },
+            {
+                question: "What is post-event discussion?",
+                answer: "Post-event discussion occurs when witnesses discuss an event after it happens, which can contaminate or alter their memories."
+            },
+            {
+                question: "How can anxiety affect eyewitness testimony?",
+                answer: "Anxiety may improve memory by increasing alertness, but high anxiety may also reduce accuracy by narrowing attention, such as through weapon focus."
+            },
+            {
+                question: "What is the cognitive interview?",
+                answer: "The cognitive interview is a police interviewing technique designed to improve eyewitness recall using psychological knowledge about retrieval cues."
+            },
+            {
+                question: "Name two techniques used in the cognitive interview.",
+                answer: "Two techniques are reinstating the context and reporting everything. Other techniques include changing the order and changing perspective."
+            },
+            {
+                question: "What is a strength of the cognitive interview?",
+                answer: "Research suggests it can increase the amount of correct information recalled compared with standard police interviews."
+            },
+            {
+                question: "What is a limitation of the cognitive interview?",
+                answer: "It can be time-consuming, requires training, and may also increase the amount of incorrect information recalled if poorly used."
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let isFlipped = false;
+        let startTime = Date.now();
+
+        function init() {
+            if (flashcards.length === 0) {
+                console.error("No flashcards loaded");
+                return;
+            }
+
+            document.getElementById("totalCards").textContent = flashcards.length;
+            displayCard();
+        }
+
+        function displayCard() {
+            const card = flashcards[currentCardIndex];
+
+            document.getElementById("cardQuestion").textContent = card.question;
+            document.getElementById("cardAnswer").textContent = card.answer;
+            document.getElementById("currentCard").textContent = currentCardIndex + 1;
+
+            isFlipped = false;
+            document.getElementById("card").classList.remove("flipped");
+
+            const progress = ((currentCardIndex + 1) / flashcards.length) * 100;
+            document.getElementById("progressFill").style.width = progress + "%";
+
+            document.getElementById("prevBtn").disabled = currentCardIndex === 0;
+
+            document.getElementById("nextBtn").textContent =
+                currentCardIndex === flashcards.length - 1 ? "Finish 🎉" : "Next →";
+        }
+
+        function nextCard() {
+            if (currentCardIndex < flashcards.length - 1) {
+                currentCardIndex++;
+                displayCard();
+            } else {
+                showCompletionScreen();
+            }
+        }
+
+        function previousCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                displayCard();
+            }
+        }
+
+        function resetCards() {
+            currentCardIndex = 0;
+            startTime = Date.now();
+
+            document.getElementById("cardScreen").style.display = "block";
+            document.getElementById("completionScreen").classList.remove("show");
+
+            displayCard();
+        }
+
+        function shuffleCards() {
+            for (let i = flashcards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+            }
+
+            resetCards();
+        }
+
+        function goBackToCards() {
+            resetCards();
+        }
+
+        function showCompletionScreen() {
+            document.getElementById("cardScreen").style.display = "none";
+            document.getElementById("completionScreen").classList.add("show");
+
+            const timeSpent = Math.max(1, Math.round((Date.now() - startTime) / 60000));
+
+            document.getElementById("statsTotal").textContent = flashcards.length;
+            document.getElementById("statsTime").textContent = timeSpent + "m";
+        }
+
+        document.getElementById("card").addEventListener("click", function () {
+            isFlipped = !isFlipped;
+            this.classList.toggle("flipped");
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowRight") {
+                nextCard();
+            }
+
+            if (event.key === "ArrowLeft") {
+                previousCard();
+            }
+
+            if (event.key === " ") {
+                event.preventDefault();
+                document.getElementById("card").click();
+            }
+        });
+
+        function downloadAsHTML() {
+            const html = document.documentElement.outerHTML;
+            const blob = new Blob([html], { type: "text/html" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = downloadFilename;
+            link.click();
+
+            URL.revokeObjectURL(url);
+        }
+
+        window.addEventListener("load", init);
+    </script>
+</body>
+</html>
