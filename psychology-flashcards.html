@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revision Hub</title>
+    <title>A Level Revision Flashcards - Psychology: Memory</title>
+
     <style>
         * {
             margin: 0;
@@ -11,200 +12,753 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --container-max-width: 800px;
+            --body-padding: 20px;
+            --card-height: 400px;
+            --card-padding: 40px;
+            --front-font-size: 1.5em;
+            --back-font-size: 1.3em;
+            --header-title-size: 2.5em;
+            --header-margin-bottom: 40px;
+            --controls-gap: 20px;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 20px;
+            align-items: center;
+            padding: var(--body-padding);
+        }
+
+        body.format-laptop {
+            --container-max-width: 800px;
+            --body-padding: 20px;
+            --card-height: 400px;
+            --card-padding: 40px;
+            --front-font-size: 1.5em;
+            --back-font-size: 1.3em;
+            --header-title-size: 2.5em;
+            --header-margin-bottom: 40px;
+            --controls-gap: 20px;
+        }
+
+        body.format-ipad {
+            --container-max-width: 980px;
+            --body-padding: 24px;
+            --card-height: 430px;
+            --card-padding: 44px;
+            --front-font-size: 1.55em;
+            --back-font-size: 1.25em;
+            --header-title-size: 2.3em;
+            --header-margin-bottom: 28px;
+            --controls-gap: 18px;
+        }
+
+        body.format-iphone {
+            --container-max-width: 430px;
+            --body-padding: 14px;
+            --card-height: 470px;
+            --card-padding: 26px;
+            --front-font-size: 1.15em;
+            --back-font-size: 1em;
+            --header-title-size: 1.65em;
+            --header-margin-bottom: 22px;
+            --controls-gap: 12px;
+            align-items: flex-start;
         }
 
         .container {
-            max-width: 800px;
             width: 100%;
+            max-width: var(--container-max-width);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 50px;
             color: white;
+            margin-bottom: var(--header-margin-bottom);
+            animation: slideDown 0.6s ease-out;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-size: var(--header-title-size);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .header p {
             font-size: 1.1em;
-            opacity: 0.95;
-            font-weight: 300;
+            opacity: 0.9;
         }
 
-        .topics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .topic-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            border: 2px solid transparent;
-        }
-
-        .topic-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-            border-color: #667eea;
-        }
-
-        .topic-card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .topic-card-title {
-            font-size: 1.3em;
+        .card-label {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.85em;
+            opacity: 0.8;
             font-weight: 600;
-            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .topic-card-description {
-            font-size: 0.95em;
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.6;
+        .flip-hint {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85em;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
         }
 
-        .topic-button {
-            display: inline-block;
-            width: 100%;
+        .card-front .flip-hint::after {
+            content: "Click to reveal answer";
+        }
+
+        .card-back .flip-hint::after {
+            content: "Click for question";
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--controls-gap);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
             padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             border: none;
             border-radius: 8px;
             font-size: 1em;
-            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            font-size: 0.9em;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .counter {
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            min-width: 120px;
             text-align: center;
+        }
+
+        .completion-screen {
+            text-align: center;
+            color: white;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .completion-screen.show {
+            display: block;
+        }
+
+        .completion-screen h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .completion-screen p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-box h3 {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-box .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        body.format-iphone .header p {
+            font-size: 0.95em;
+        }
+
+        body.format-iphone .progress-bar {
+            margin-top: 16px;
+            margin-bottom: 20px;
+        }
+
+        body.format-iphone .card-label {
+            font-size: 0.72em;
+            top: 12px;
+            right: 15px;
+        }
+
+        body.format-iphone .flip-hint {
+            font-size: 0.75em;
+            bottom: 12px;
+        }
+
+        body.format-iphone .controls {
+            flex-direction: column;
+            margin-bottom: 18px;
+        }
+
+        body.format-iphone .btn-primary,
+        body.format-iphone .btn-secondary,
+        body.format-iphone .counter {
+            width: 100%;
+        }
+
+        body.format-iphone .btn {
+            padding: 11px 18px;
+            font-size: 0.9em;
+        }
+
+        body.format-iphone .card:hover {
+            transform: none;
+        }
+
+        body.format-iphone .stats {
+            grid-template-columns: 1fr;
+        }
+
+        .btn-back-to-index {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.25);
+            color: white;
+            padding: 10px 16px;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
         }
 
-        .topic-button:hover {
+        .btn-back-to-index:hover {
+            background: rgba(255,255,255,0.4);
+            transform: translateX(-5px);
+        }
+
+        body.format-iphone .btn-back-to-index {
+            top: 10px;
+            left: 10px;
+            padding: 8px 14px;
+            font-size: 0.8em;
+        }
+
+        body.format-ipad .btn-back-to-index {
+            top: 24px;
+            left: 24px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4ade80;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 100%;
+            height: var(--card-height);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
             transform: scale(1.02);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .topic-button:active {
-            transform: scale(0.98);
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2em;
-            }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
 
-            .header p {
-                font-size: 0.95em;
-            }
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            padding: var(--card-padding);
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
 
-            .topics-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
+        .card-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: var(--front-font-size);
+            font-weight: 500;
+            line-height: 1.6;
+        }
 
-            .topic-card {
-                padding: 25px;
-            }
+        .card-back {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: var(--back-font-size);
+            line-height: 1.7;
+            transform: rotateY(180deg);
+        }
 
+        .card-content {
+            max-height: 100%;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        @media print {
             body {
-                padding: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                margin-bottom: 35px;
+                background: white;
             }
 
-            .header h1 {
-                font-size: 1.65em;
+            .controls,
+            .header,
+            .completion-screen,
+            .btn-back-to-index {
+                display: none;
             }
 
-            .header p {
-                font-size: 0.9em;
-            }
-
-            .topics-grid {
-                gap: 15px;
-            }
-
-            .topic-card {
-                padding: 20px;
-            }
-
-            .topic-card-title {
-                font-size: 1.1em;
-            }
-
-            .topic-button {
-                padding: 10px 20px;
-                font-size: 0.95em;
-            }
-
-            body {
-                padding: 14px;
+            .card {
+                page-break-inside: avoid;
+                break-inside: avoid;
             }
         }
     </style>
 </head>
-<body>
+
+<body class="format-iphone">
+    <a href="./index.html" class="btn-back-to-index">← Back to Topics</a>
+
     <div class="container">
         <div class="header">
-            <h1>📚 Revision Hub</h1>
-            <p>Select a topic below to begin your revision</p>
+            <h1>Psychology: Memory</h1>
+            <p>A Level Revision Flashcards</p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
         </div>
 
-        <div class="topics-grid">
-            <a href="./psychology-flashcards.html" class="topic-card">
-                <div class="topic-card-header">
-                    <h2 class="topic-card-title">Psychology</h2>
-                </div>
-                <p class="topic-card-description">Master the core concepts and theories of psychology. Test your knowledge on memory, cognitive processes, and human behavior.</p>
-                <button class="topic-button">Start Flashcards →</button>
-            </a>
+        <div id="cardScreen">
+            <div class="card-container">
+                <div class="card" id="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="card-content">
+                                <div class="card-label">Question</div>
+                                <div id="cardQuestion"></div>
+                                <div class="flip-hint"></div>
+                            </div>
+                        </div>
 
-            <!-- Additional topics can be added here following the same structure -->
-            <!-- Example:
-            <a href="./biology-flashcards.html" class="topic-card">
-                <div class="topic-card-header">
-                    <h2 class="topic-card-title">Biology</h2>
+                        <div class="card-back">
+                            <div class="card-content">
+                                <div class="card-label">Answer</div>
+                                <div id="cardAnswer"></div>
+                                <div class="flip-hint"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="topic-card-description">Explore the fundamentals of life sciences. Test your understanding of cells, genetics, and ecosystems.</p>
-                <button class="topic-button">Start Flashcards →</button>
-            </a>
-            -->
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="prevBtn" onclick="previousCard()">← Previous</button>
+
+                <div class="counter">
+                    <span id="currentCard">1</span> / <span id="totalCards">0</span>
+                </div>
+
+                <button class="btn btn-primary" id="nextBtn" onclick="nextCard()">Next →</button>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="resetCards()">Start Over</button>
+                <button class="btn btn-secondary" onclick="shuffleCards()">Shuffle</button>
+            </div>
+        </div>
+
+        <div class="completion-screen" id="completionScreen">
+            <h2>🎉 You've finished all cards!</h2>
+            <p>Great work on your revision!</p>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <h3>Cards Reviewed</h3>
+                    <div class="value" id="statsTotal">0</div>
+                </div>
+
+                <div class="stat-box">
+                    <h3>Time Spent</h3>
+                    <div class="value" id="statsTime">0m</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="goBackToCards()">Review Again</button>
+                <button class="btn btn-secondary" onclick="downloadAsHTML()">Download Flashcards</button>
+            </div>
         </div>
     </div>
+
+    <script>
+        const downloadFilename = "flashcards-psychology-memory-iphone.html";
+
+        const flashcards = [
+            {
+                question: "What is memory in psychology?",
+                answer: "Memory is the process by which information is encoded, stored and retrieved. It allows past experiences and knowledge to influence present behaviour."
+            },
+            {
+                question: "What are the three main processes involved in memory?",
+                answer: "Encoding is changing information into a usable form, storage is keeping information over time, and retrieval is accessing stored information when needed."
+            },
+            {
+                question: "What is the multi-store model of memory?",
+                answer: "Atkinson and Shiffrin proposed that memory consists of separate stores: sensory register, short-term memory and long-term memory. Information flows between stores through attention and rehearsal."
+            },
+            {
+                question: "What is the sensory register?",
+                answer: "The sensory register briefly holds information from the senses. It has a very large capacity but a very short duration, usually less than half a second for visual information."
+            },
+            {
+                question: "What is short-term memory?",
+                answer: "Short-term memory is a temporary store with limited capacity and duration. It mainly codes information acoustically and lasts around 18 to 30 seconds without rehearsal."
+            },
+            {
+                question: "What is long-term memory?",
+                answer: "Long-term memory is a relatively permanent store with potentially unlimited capacity and duration. It mainly codes information semantically, meaning by meaning."
+            },
+            {
+                question: "What did Miller suggest about short-term memory capacity?",
+                answer: "Miller suggested that short-term memory has a capacity of about 7 plus or minus 2 items. He also argued that chunking can increase how much information is remembered."
+            },
+            {
+                question: "What did Peterson and Peterson find about short-term memory duration?",
+                answer: "They found that participants remembered trigrams less accurately as the delay increased. This suggests short-term memory lasts around 18 to 30 seconds without rehearsal."
+            },
+            {
+                question: "What did Bahrick et al. find about long-term memory duration?",
+                answer: "Bahrick et al. found that people could recognise classmates from high school photographs decades later, suggesting that long-term memory can last for many years."
+            },
+            {
+                question: "What is one strength of the multi-store model?",
+                answer: "There is research support from studies such as Peterson and Peterson, which show short-term memory has limited duration, and Bahrick et al., which show long-term memory can last a very long time."
+            },
+            {
+                question: "What is one limitation of the multi-store model?",
+                answer: "It is too simplistic because it treats short-term memory and long-term memory as single stores. Later research suggests both stores are more complex."
+            },
+            {
+                question: "How does the case of HM challenge or support the multi-store model?",
+                answer: "HM had severe problems forming new long-term memories but his short-term memory remained relatively intact. This supports the idea that short-term and long-term memory are separate stores."
+            },
+            {
+                question: "What is the working memory model?",
+                answer: "Baddeley and Hitch proposed that short-term memory is an active system made of several components, including the central executive, phonological loop, visuo-spatial sketchpad and episodic buffer."
+            },
+            {
+                question: "What is the central executive?",
+                answer: "The central executive controls attention, allocates tasks to other components and coordinates the working memory system. It has limited capacity."
+            },
+            {
+                question: "What is the phonological loop?",
+                answer: "The phonological loop processes speech-based and sound-based information. It includes the phonological store and articulatory process."
+            },
+            {
+                question: "What is the visuo-spatial sketchpad?",
+                answer: "The visuo-spatial sketchpad stores and manipulates visual and spatial information, such as remembering a route or picturing an object."
+            },
+            {
+                question: "What is the episodic buffer?",
+                answer: "The episodic buffer is a temporary store that integrates information from the other working memory components and links working memory to long-term memory."
+            },
+            {
+                question: "What is a strength of the working memory model?",
+                answer: "It is supported by dual-task studies. People find it harder to do two tasks using the same component than two tasks using different components."
+            },
+            {
+                question: "What is a limitation of the working memory model?",
+                answer: "The central executive is not fully explained and may be more complex than the model suggests. This makes it difficult to test precisely."
+            },
+            {
+                question: "What are the three types of long-term memory proposed by Tulving?",
+                answer: "Tulving proposed episodic memory, semantic memory and procedural memory as different types of long-term memory."
+            },
+            {
+                question: "What is episodic memory?",
+                answer: "Episodic memory is memory for personal events and experiences. It usually includes contextual details such as time, place and emotions."
+            },
+            {
+                question: "What is semantic memory?",
+                answer: "Semantic memory is memory for facts, concepts and general knowledge, such as knowing that Paris is the capital of France."
+            },
+            {
+                question: "What is procedural memory?",
+                answer: "Procedural memory is memory for actions and skills, such as riding a bike or typing. It is often automatic and difficult to explain verbally."
+            },
+            {
+                question: "What is interference as an explanation for forgetting?",
+                answer: "Interference occurs when two sets of information conflict, causing forgetting. Proactive interference is old learning disrupting new learning, while retroactive interference is new learning disrupting old learning."
+            },
+            {
+                question: "What is retrieval failure?",
+                answer: "Retrieval failure occurs when information is stored in long-term memory but cannot be accessed because the correct cue is absent."
+            },
+            {
+                question: "What is context-dependent forgetting?",
+                answer: "Context-dependent forgetting occurs when external cues present at encoding are absent at retrieval. Recall is often better when learning and recall take place in the same environment."
+            },
+            {
+                question: "What is state-dependent forgetting?",
+                answer: "State-dependent forgetting occurs when internal cues, such as mood or physiological state, differ between encoding and retrieval."
+            },
+            {
+                question: "What did Baddeley find in the diving study?",
+                answer: "Baddeley found that divers recalled words better when learning and recall occurred in the same setting, either on land or underwater. This supports context-dependent forgetting."
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let isFlipped = false;
+        let startTime = Date.now();
+
+        function init() {
+            if (flashcards.length === 0) {
+                console.error("No flashcards loaded");
+                return;
+            }
+
+            document.getElementById("totalCards").textContent = flashcards.length;
+            displayCard();
+        }
+
+        function displayCard() {
+            const card = flashcards[currentCardIndex];
+
+            document.getElementById("cardQuestion").textContent = card.question;
+            document.getElementById("cardAnswer").textContent = card.answer;
+            document.getElementById("currentCard").textContent = currentCardIndex + 1;
+
+            isFlipped = false;
+            document.getElementById("card").classList.remove("flipped");
+
+            const progress = ((currentCardIndex + 1) / flashcards.length) * 100;
+            document.getElementById("progressFill").style.width = progress + "%";
+
+            document.getElementById("prevBtn").disabled = currentCardIndex === 0;
+
+            document.getElementById("nextBtn").textContent =
+                currentCardIndex === flashcards.length - 1 ? "Finish 🎉" : "Next →";
+        }
+
+        function nextCard() {
+            if (currentCardIndex < flashcards.length - 1) {
+                currentCardIndex++;
+                displayCard();
+            } else {
+                showCompletionScreen();
+            }
+        }
+
+        function previousCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                displayCard();
+            }
+        }
+
+        function resetCards() {
+            currentCardIndex = 0;
+            startTime = Date.now();
+
+            document.getElementById("cardScreen").style.display = "block";
+            document.getElementById("completionScreen").classList.remove("show");
+
+            displayCard();
+        }
+
+        function shuffleCards() {
+            for (let i = flashcards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+            }
+
+            resetCards();
+        }
+
+        function goBackToCards() {
+            resetCards();
+        }
+
+        function showCompletionScreen() {
+            document.getElementById("cardScreen").style.display = "none";
+            document.getElementById("completionScreen").classList.add("show");
+
+            const timeSpent = Math.max(1, Math.round((Date.now() - startTime) / 60000));
+
+            document.getElementById("statsTotal").textContent = flashcards.length;
+            document.getElementById("statsTime").textContent = timeSpent + "m";
+        }
+
+        document.getElementById("card").addEventListener("click", function () {
+            isFlipped = !isFlipped;
+            this.classList.toggle("flipped");
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowRight") {
+                nextCard();
+            }
+
+            if (event.key === "ArrowLeft") {
+                previousCard();
+            }
+
+            if (event.key === " ") {
+                event.preventDefault();
+                document.getElementById("card").click();
+            }
+        });
+
+        function downloadAsHTML() {
+            const html = document.documentElement.outerHTML;
+            const blob = new Blob([html], { type: "text/html" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = downloadFilename;
+            link.click();
+
+            URL.revokeObjectURL(url);
+        }
+
+        window.addEventListener("load", init);
+    </script>
 </body>
 </html>
-
