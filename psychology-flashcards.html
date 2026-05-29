@@ -123,6 +123,98 @@
             content: "Click for question";
         }
 
+        .stat-box h3 {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-box .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        body.format-iphone .header p {
+            font-size: 0.95em;
+        }
+
+        body.format-iphone .progress-bar {
+            margin-top: 16px;
+            margin-bottom: 20px;
+        }
+
+        body.format-iphone .card-label {
+            font-size: 0.72em;
+            top: 12px;
+            right: 15px;
+        }
+
+        body.format-iphone .flip-hint {
+            font-size: 0.75em;
+            bottom: 12px;
+        }
+
+        body.format-iphone .controls {
+            flex-direction: column;
+            margin-bottom: 18px;
+        }
+
+        body.format-iphone .btn-primary,
+        body.format-iphone .btn-secondary,
+        body.format-iphone .counter {
+            width: 100%;
+        }
+
+        body.format-iphone .btn {
+            padding: 11px 18px;
+            font-size: 0.9em;
+        }
+
+        body.format-iphone .card:hover {
+            transform: none;
+        }
+
+        body.format-iphone .btn-primary:hover {
+            transform: none;
+        }
+
+        body.format-iphone .stats {
+            grid-template-columns: 1fr;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
         .controls {
             display: flex;
             justify-content: space-between;
@@ -142,6 +234,9 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
         }
 
         .btn-primary {
@@ -218,131 +313,6 @@
             padding: 20px;
             border-radius: 10px;
             backdrop-filter: blur(10px);
-        }
-
-        .stat-box h3 {
-            font-size: 0.9em;
-            opacity: 0.8;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .stat-box .value {
-            font-size: 2em;
-            font-weight: bold;
-        }
-
-        body.format-iphone .header p {
-            font-size: 0.95em;
-        }
-
-        body.format-iphone .progress-bar {
-            margin-top: 16px;
-            margin-bottom: 20px;
-        }
-
-        body.format-iphone .card-label {
-            font-size: 0.72em;
-            top: 12px;
-            right: 15px;
-        }
-
-        body.format-iphone .flip-hint {
-            font-size: 0.75em;
-            bottom: 12px;
-        }
-
-        body.format-iphone .controls {
-            flex-direction: column;
-            margin-bottom: 18px;
-        }
-
-        body.format-iphone .btn-primary,
-        body.format-iphone .btn-secondary,
-        body.format-iphone .counter {
-            width: 100%;
-        }
-
-        body.format-iphone .btn {
-            padding: 11px 18px;
-            font-size: 0.9em;
-        }
-
-        body.format-iphone .card:hover {
-            transform: none;
-        }
-
-        body.format-iphone .stats {
-            grid-template-columns: 1fr;
-        }
-
-        .btn-back-to-index {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255,255,255,0.25);
-            color: white;
-            padding: 10px 16px;
-            border: 2px solid white;
-            border-radius: 8px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 1000;
-        }
-
-        .btn-back-to-index:hover {
-            background: rgba(255,255,255,0.4);
-            transform: translateX(-5px);
-        }
-
-        body.format-iphone .btn-back-to-index {
-            top: 10px;
-            left: 10px;
-            padding: 8px 14px;
-            font-size: 0.8em;
-        }
-
-        body.format-ipad .btn-back-to-index {
-            top: 24px;
-            left: 24px;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 0.7;
-            }
-
-            50% {
-                opacity: 1;
-            }
         }
 
         .progress-bar {
@@ -437,8 +407,7 @@
 
             .controls,
             .header,
-            .completion-screen,
-            .btn-back-to-index {
+            .completion-screen {
                 display: none;
             }
 
@@ -451,8 +420,6 @@
 </head>
 
 <body class="format-iphone">
-    <a href="./index.html" class="btn-back-to-index">← Back to Topics</a>
-
     <div class="container">
         <div class="header">
             <h1>Psychology: Memory</h1>
@@ -499,6 +466,7 @@
             <div class="controls">
                 <button class="btn btn-secondary" onclick="resetCards()">Start Over</button>
                 <button class="btn btn-secondary" onclick="shuffleCards()">Shuffle</button>
+                <a href="./index.html" class="btn btn-secondary">← Back to Topics</a>
             </div>
         </div>
 
@@ -521,6 +489,7 @@
             <div class="controls">
                 <button class="btn btn-primary" onclick="goBackToCards()">Review Again</button>
                 <button class="btn btn-secondary" onclick="downloadAsHTML()">Download Flashcards</button>
+                <a href="./index.html" class="btn btn-secondary">← Back to Topics</a>
             </div>
         </div>
     </div>
@@ -530,116 +499,124 @@
 
         const flashcards = [
             {
-                question: "What is memory in psychology?",
-                answer: "Memory is the process by which information is encoded, stored and retrieved. It allows past experiences and knowledge to influence present behaviour."
+                question: "What is memory?",
+                answer: "Memory is the process of encoding, storing and retrieving information. Encoding means putting information into a usable form, storage means keeping it, and retrieval means accessing it later."
             },
             {
-                question: "What are the three main processes involved in memory?",
-                answer: "Encoding is changing information into a usable form, storage is keeping information over time, and retrieval is accessing stored information when needed."
-            },
-            {
-                question: "What is the multi-store model of memory?",
-                answer: "Atkinson and Shiffrin proposed that memory consists of separate stores: sensory register, short-term memory and long-term memory. Information flows between stores through attention and rehearsal."
+                question: "What are the three main stores in the multi-store model of memory?",
+                answer: "The three stores are the sensory register, short-term memory and long-term memory. Information moves between stores through attention, rehearsal and retrieval."
             },
             {
                 question: "What is the sensory register?",
-                answer: "The sensory register briefly holds information from the senses. It has a very large capacity but a very short duration, usually less than half a second for visual information."
+                answer: "The sensory register is a brief store for information from the senses. It has a very large capacity, but information usually lasts for less than a second unless attention is paid to it."
+            },
+            {
+                question: "How does information move from the sensory register to short-term memory?",
+                answer: "Information moves from the sensory register to short-term memory when attention is paid to it. Unattended sensory information quickly decays."
             },
             {
                 question: "What is short-term memory?",
-                answer: "Short-term memory is a temporary store with limited capacity and duration. It mainly codes information acoustically and lasts around 18 to 30 seconds without rehearsal."
+                answer: "Short-term memory is a temporary, limited-capacity store that holds information currently being used. It is mainly coded acoustically and lasts around 18 to 30 seconds without rehearsal."
             },
             {
-                question: "What is long-term memory?",
-                answer: "Long-term memory is a relatively permanent store with potentially unlimited capacity and duration. It mainly codes information semantically, meaning by meaning."
+                question: "What did Jacobs find about the capacity of short-term memory?",
+                answer: "Jacobs found that average digit span was about 9.3 items and average letter span was about 7.3 items. This supports the idea that short-term memory has limited capacity."
             },
             {
                 question: "What did Miller suggest about short-term memory capacity?",
-                answer: "Miller suggested that short-term memory has a capacity of about 7 plus or minus 2 items. He also argued that chunking can increase how much information is remembered."
+                answer: "Miller suggested that short-term memory can hold about 7 plus or minus 2 items. He also argued that chunking can increase the amount of information held."
             },
             {
                 question: "What did Peterson and Peterson find about short-term memory duration?",
-                answer: "They found that participants remembered trigrams less accurately as the delay increased. This suggests short-term memory lasts around 18 to 30 seconds without rehearsal."
+                answer: "Participants recalled trigrams after different delay intervals while counting backwards. Recall fell sharply after 18 seconds, suggesting short-term memory has a short duration when rehearsal is prevented."
+            },
+            {
+                question: "What is long-term memory?",
+                answer: "Long-term memory is a relatively permanent store with potentially unlimited capacity. It mainly uses semantic coding, meaning information is stored according to meaning."
             },
             {
                 question: "What did Bahrick et al. find about long-term memory duration?",
-                answer: "Bahrick et al. found that people could recognise classmates from high school photographs decades later, suggesting that long-term memory can last for many years."
+                answer: "Bahrick et al. found that some participants could recognise school classmates decades after leaving school. This suggests that some long-term memories can last for a very long time."
+            },
+            {
+                question: "What did Baddeley find about coding in short-term and long-term memory?",
+                answer: "Baddeley found that short-term memory was confused by acoustically similar words, while long-term memory was confused by semantically similar words. This suggests STM is mainly acoustic and LTM is mainly semantic."
+            },
+            {
+                question: "What is the primacy effect?",
+                answer: "The primacy effect is better recall for words at the start of a list. In the multi-store model, it occurs because early words are rehearsed and transferred to long-term memory."
+            },
+            {
+                question: "What is the recency effect?",
+                answer: "The recency effect is better recall for words at the end of a list. It occurs because the last words are still available in short-term memory."
             },
             {
                 question: "What is one strength of the multi-store model?",
-                answer: "There is research support from studies such as Peterson and Peterson, which show short-term memory has limited duration, and Bahrick et al., which show long-term memory can last a very long time."
+                answer: "A strength is that it is supported by research showing differences between short-term and long-term memory, such as Baddeley on coding and Peterson and Peterson on STM duration."
             },
             {
                 question: "What is one limitation of the multi-store model?",
-                answer: "It is too simplistic because it treats short-term memory and long-term memory as single stores. Later research suggests both stores are more complex."
-            },
-            {
-                question: "How does the case of HM challenge or support the multi-store model?",
-                answer: "HM had severe problems forming new long-term memories but his short-term memory remained relatively intact. This supports the idea that short-term and long-term memory are separate stores."
+                answer: "A limitation is that it oversimplifies memory by treating STM and LTM as single stores. Evidence from brain-damaged patients suggests there are different types of long-term memory."
             },
             {
                 question: "What is the working memory model?",
-                answer: "Baddeley and Hitch proposed that short-term memory is an active system made of several components, including the central executive, phonological loop, visuo-spatial sketchpad and episodic buffer."
+                answer: "The working memory model explains short-term memory as an active system with separate components that process different types of information, rather than one unitary store."
             },
             {
                 question: "What is the central executive?",
-                answer: "The central executive controls attention, allocates tasks to other components and coordinates the working memory system. It has limited capacity."
+                answer: "The central executive directs attention and coordinates the other components of working memory. It has limited capacity and is involved in decision-making and problem-solving."
             },
             {
                 question: "What is the phonological loop?",
-                answer: "The phonological loop processes speech-based and sound-based information. It includes the phonological store and articulatory process."
+                answer: "The phonological loop processes speech-based and sound-based information. It includes the phonological store and the articulatory process, which allows verbal rehearsal."
             },
             {
                 question: "What is the visuo-spatial sketchpad?",
-                answer: "The visuo-spatial sketchpad stores and manipulates visual and spatial information, such as remembering a route or picturing an object."
+                answer: "The visuo-spatial sketchpad processes visual and spatial information, such as images, locations and mental maps. It is sometimes described as the inner eye."
             },
             {
                 question: "What is the episodic buffer?",
-                answer: "The episodic buffer is a temporary store that integrates information from the other working memory components and links working memory to long-term memory."
+                answer: "The episodic buffer is a temporary store that integrates information from the central executive, long-term memory, phonological loop and visuo-spatial sketchpad into a coherent episode."
             },
             {
-                question: "What is a strength of the working memory model?",
-                answer: "It is supported by dual-task studies. People find it harder to do two tasks using the same component than two tasks using different components."
+                question: "What is one strength of the working memory model?",
+                answer: "A strength is support from dual-task studies. People can often do one visual and one verbal task at the same time, but struggle with two tasks using the same component."
             },
             {
-                question: "What is a limitation of the working memory model?",
-                answer: "The central executive is not fully explained and may be more complex than the model suggests. This makes it difficult to test precisely."
-            },
-            {
-                question: "What are the three types of long-term memory proposed by Tulving?",
-                answer: "Tulving proposed episodic memory, semantic memory and procedural memory as different types of long-term memory."
-            },
-            {
-                question: "What is episodic memory?",
-                answer: "Episodic memory is memory for personal events and experiences. It usually includes contextual details such as time, place and emotions."
-            },
-            {
-                question: "What is semantic memory?",
-                answer: "Semantic memory is memory for facts, concepts and general knowledge, such as knowing that Paris is the capital of France."
-            },
-            {
-                question: "What is procedural memory?",
-                answer: "Procedural memory is memory for actions and skills, such as riding a bike or typing. It is often automatic and difficult to explain verbally."
+                question: "What is one limitation of the working memory model?",
+                answer: "A limitation is that the central executive is vague and difficult to study directly. It may not be a single component and could involve several different processes."
             },
             {
                 question: "What is interference as an explanation for forgetting?",
-                answer: "Interference occurs when two sets of information conflict, causing forgetting. Proactive interference is old learning disrupting new learning, while retroactive interference is new learning disrupting old learning."
+                answer: "Interference occurs when one memory disrupts another, making recall harder. It is most likely when two sets of information are similar."
+            },
+            {
+                question: "What is proactive interference?",
+                answer: "Proactive interference occurs when older memories disrupt the recall of newer memories. For example, an old password may make it harder to remember a new password."
+            },
+            {
+                question: "What is retroactive interference?",
+                answer: "Retroactive interference occurs when newer memories disrupt the recall of older memories. For example, learning a new phone number may make it harder to remember an old one."
             },
             {
                 question: "What is retrieval failure?",
-                answer: "Retrieval failure occurs when information is stored in long-term memory but cannot be accessed because the correct cue is absent."
+                answer: "Retrieval failure occurs when information is stored in long-term memory but cannot be accessed because the necessary retrieval cues are absent."
             },
             {
-                question: "What is context-dependent forgetting?",
-                answer: "Context-dependent forgetting occurs when external cues present at encoding are absent at retrieval. Recall is often better when learning and recall take place in the same environment."
+                question: "What is the encoding specificity principle?",
+                answer: "The encoding specificity principle states that recall is best when cues present at encoding are also present at retrieval. The cue must be meaningfully linked to the original memory."
             },
             {
-                question: "What is state-dependent forgetting?",
-                answer: "State-dependent forgetting occurs when internal cues, such as mood or physiological state, differ between encoding and retrieval."
+                question: "What is misleading information in eyewitness testimony?",
+                answer: "Misleading information is incorrect information given after an event, which can distort a witness memory. It may come from leading questions or post-event discussion."
             },
             {
-                question: "What did Baddeley find in the diving study?",
-                answer: "Baddeley found that divers recalled words better when learning and recall occurred in the same setting, either on land or underwater. This supports context-dependent forgetting."
+                question: "What did Loftus and Palmer find about leading questions?",
+                answer: "Loftus and Palmer found that participants estimated higher car speeds when asked how fast cars smashed into each other than when asked how fast they hit each other. This shows wording can affect eyewitness memory."
+            },
+            {
+                question: "What is the cognitive interview?",
+                answer: "The cognitive interview is a police interview technique designed to improve eyewitness recall. It includes reinstating context, reporting everything, recalling events in a different order and changing perspective."
             }
         ];
 
